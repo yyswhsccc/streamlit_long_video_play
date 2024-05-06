@@ -7,7 +7,7 @@ from datetime import datetime
 # Constants and configuration
 SHEET_ID = '1jESaEV_iK5GSuO2WDV8RTcDzP42WmDIE4dAIei7yYFU'
 RANGE_NAME = 'Sheet1'
-SERVICE_ACCOUNT_FILE = '/home/ec2-user/caption-comparison-3dd6dfcad088.json'
+SERVICE_ACCOUNT_FILE = 'caption-comparison-3dd6dfcad088.json'
 num_ids = 2000
 
 # Initialize Google Sheets API
