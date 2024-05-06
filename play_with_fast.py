@@ -99,7 +99,7 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     
     # Update the average score in column C
     result_cell = f"{RANGE_NAME}!C{row_index}"
-    result_value = [{'range': result_cell, 'values': [[f"{average_score:.2f}"]]}]
+    result_value = [{'range': result_cell, 'values': [[f"{average_score:.2f}\nNumber of raters: {num_raters}"]]}]
     result_body = {'valueInputOption': 'USER_ENTERED', 'data': result_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=result_body).execute()
 
