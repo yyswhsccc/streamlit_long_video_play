@@ -15,13 +15,6 @@ credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
 service = build('sheets', 'v4', credentials=credentials)
 sheet = service.spreadsheets()
 
-# Helper functions
-def load_worker_ids(file_path):
-    with open(file_path, 'r') as file:
-        return [line.strip() for line in file.readlines()]
-
-worker_ids_list = load_worker_ids("/home/ec2-user/user_ID_secure.txt")
-
 # def get_image_and_captions(id):
 #     # 构建视频文件名
 #     video_filename = f"{id:08d}.mp4"
