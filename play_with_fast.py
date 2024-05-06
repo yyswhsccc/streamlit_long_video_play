@@ -50,27 +50,28 @@ from datetime import datetime
 # Also, define `sheet` which represents the Google Sheets API client.
 
 def save_vote_to_sheet(id, vote, reviewer_name, reason):
+def save_score_to_sheet(id, score, reviewer_name, reason):
     row_index = id + 2  # Assuming data starts from the third row, id is a 0-based index
 
-    vote_cell = f"{RANGE_NAME}!D{row_index}"
-    current_votes = sheet.values().get(spreadsheetId=SHEET_ID, range=vote_cell).execute().get('values', [['']])[0][0]
+    score_cell = f"{RANGE_NAME}!D{row_index}"
+    current_scores = sheet.values().get(spreadsheetId=SHEET_ID, range=score_cell).execute().get('values', [['']])[0][0]
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    # Process existing votes
-    all_votes = current_votes.split('\n')
-    user_votes = {}
-    for v in all_votes:
-        if ':' in v:
-            name, rest = v.split(':', 1)
-            user_votes[name.strip()] = rest.strip()
+    # Process existing scores
+    all_scores = current_scores.split('\n')
+    user_scores = {}
+    for s in all_scores:
+        if ':' in s:
+            name, rest = s.split(':', 1)
+            user_scores[name.strip()] = rest.strip()
     
-    # Update with the new vote
-    user_votes[reviewer_name] = f"{vote} at {timestamp}"
+    # Update with the new score
+    user_scores[reviewer_name] = f"{score} at {timestamp}"
     
     # Convert back to the final string for storage
-    final_votes = '\n'.join([f"{name}: {v}" for name, v in user_votes.items()])
-    vote_value = [{'range': vote_cell, 'values': [[final_votes]]}]
-    body = {'valueInputOption': 'USER_ENTERED', 'data': vote_value}
+    final_scores = '\n'.join([f"{name}: {s}" for name, s in user_scores.items()])
+    score_value = [{'range': score_cell, 'values': [[final_scores]]}]
+    body = {'valueInputOption': 'USER_ENTERED', 'data': score_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=body).execute()
 
     # Update the history
@@ -90,14 +91,16 @@ def save_vote_to_sheet(id, vote, reviewer_name, reason):
     reason_body = {'valueInputOption': 'USER_ENTERED', 'data': reason_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=reason_body).execute()
 
-    # Calculate the final result based on latest votes
-    yes_votes = sum(1 for v in user_votes.values() if 'Yes' in v)
-    total_votes = len(user_votes)
-    result = "Keep" if yes_votes / total_votes > 0.6 else "No"
-
-    # Update result in column C
+    # Calculate the average score based on the latest scores
+    total_score = 0
+    for s in user_scores.values():
+        score_value = float(s.split(' ')[0])
+        total_score += score_value
+    average_score = total_score / len(user_scores)
+    
+    # Update the average score in column C
     result_cell = f"{RANGE_NAME}!C{row_index}"
-    result_value = [{'range': result_cell, 'values': [[result]]}]
+    result_value = [{'range': result_cell, 'values': [[f"{average_score:.2f}"]]}]
     result_body = {'valueInputOption': 'USER_ENTERED', 'data': result_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=result_body).execute()
 
