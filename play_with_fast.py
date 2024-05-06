@@ -73,8 +73,17 @@ def save_vote_to_sheet(id, vote, reviewer_name, reason):
     body = {'valueInputOption': 'USER_ENTERED', 'data': vote_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=body).execute()
 
+    # Update the history
+    history_cell = f"E{row_index}"
+    current_history = sheet.values().get(spreadsheetId=SHEET_ID, range=history_cell).execute().get('values', [['']])[0][0]
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    new_history = f"{current_history}\n{reviewer_name}: {vote} at {timestamp}".strip()
+    history_value = [{'range': history_cell, 'values': [[new_history]]}]
+    history_body = {'valueInputOption': 'USER_ENTERED', 'data': history_value}
+    sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=history_body).execute()
+
     # Update the rating reason
-    reason_cell = f"E{row_index}"
+    reason_cell = f"F{row_index}"
     current_reason = sheet.values().get(spreadsheetId=SHEET_ID, range=reason_cell).execute().get('values', [['']])[0][0]
     new_reason = f"{current_reason}\n{reviewer_name}: {reason}, at {timestamp}".strip()
     reason_value = [{'range': reason_cell, 'values': [[new_reason]]}]
