@@ -104,19 +104,17 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     result_body = {'valueInputOption': 'USER_ENTERED', 'data': result_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=result_body).execute()
 
-
-def submit(id, vote, reviewer_name, reason):
+def submit(id, score, reviewer_name, reason):
     if not reviewer_name:
-        return "Please enter your name to vote on this video."
+        return "Please enter your name to rate this video."
     if not reason:
-        return "Please provide a reason for your vote."
-    save_vote_to_sheet(id, vote, reviewer_name, reason)
-    return "Vote and reason saved successfully."
-
+        return "Please provide a reason for your rating."
+    save_score_to_sheet(id, score, reviewer_name, reason)
+    return "Rating and reason saved successfully."
 
 def main():
-    st.title("Data Voting Tool")
-    st.write("Please vote to decide whether this video should remain in our dataset.")
+    st.title("Data Rating Tool")
+    st.write("Please rate this video to decide whether it should remain in our dataset.")
 
     ids = list(range(num_ids))
     id_dropdown = st.selectbox("Choose Data ID", ids)
@@ -127,15 +125,14 @@ def main():
     # Display video based on selected data ID
     st.video(video_url)
 
-    vote_input = st.radio("Please vote", ["Yes", "No"])
+    score_input = st.slider("Rate the video (1: Terrible, 3: Pass, 5: High quality)", 1, 5, value=3)
     reviewer_name_input = st.text_input("Your Name", placeholder="Enter your name...")
-    reason_input = st.text_area("Voting Reason", placeholder="Enter your reason for voting...")
+    reason_input = st.text_area("Rating Reason", placeholder="Enter your reason for rating...")
 
-    if st.button("Submit Voting"):
-        result = submit(id_dropdown, vote_input, reviewer_name_input, reason_input)
+    if st.button("Submit Rating"):
+        result = submit(id_dropdown, score_input, reviewer_name_input, reason_input)
         st.write(result)
 
 if __name__ == "__main__":
     main()
-
 
