@@ -77,7 +77,7 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     history_cell = f"E{row_index}"
     current_history = sheet.values().get(spreadsheetId=SHEET_ID, range=history_cell).execute().get('values', [['']])[0][0]
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    new_history = f"{current_history}\n{reviewer_name}: {vote} at {timestamp}".strip()
+    new_history = f"{current_history}\n{reviewer_name}: {score} at {timestamp}".strip()
     history_value = [{'range': history_cell, 'values': [[new_history]]}]
     history_body = {'valueInputOption': 'USER_ENTERED', 'data': history_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=history_body).execute()
