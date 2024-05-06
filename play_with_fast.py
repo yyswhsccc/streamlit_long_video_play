@@ -49,7 +49,6 @@ from datetime import datetime
 # RANGE_NAME and SHEET_ID should be defined here or imported
 # Also, define `sheet` which represents the Google Sheets API client.
 
-def save_vote_to_sheet(id, vote, reviewer_name, reason):
 def save_score_to_sheet(id, score, reviewer_name, reason):
     row_index = id + 2  # Assuming data starts from the third row, id is a 0-based index
 
