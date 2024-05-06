@@ -52,28 +52,26 @@ from datetime import datetime
 def save_vote_to_sheet(id, vote, reviewer_name, reason):
     row_index = id + 2  # Assuming data starts from the third row, id is a 0-based index
 
-    # # Update the vote
-    # vote_cell = f"{RANGE_NAME}!F{row_index}"
-    # vote_value = [{'range': vote_cell, 'values': [[vote]]}]
-    # body = {'valueInputOption': 'USER_ENTERED', 'data': vote_value}
-    # sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=body).execute()
-
     vote_cell = f"{RANGE_NAME}!D{row_index}"
     current_votes = sheet.values().get(spreadsheetId=SHEET_ID, range=vote_cell).execute().get('values', [['']])[0][0]
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    new_vote = f"{current_votes}\n{reviewer_name}: {vote} at {timestamp}".strip()
-    vote_value = [{'range': vote_cell, 'values': [[new_vote]]}]
+    
+    # Process existing votes
+    all_votes = current_votes.split('\n')
+    user_votes = {}
+    for v in all_votes:
+        if ':' in v:
+            name, rest = v.split(':', 1)
+            user_votes[name.strip()] = rest.strip()
+    
+    # Update with the new vote
+    user_votes[reviewer_name] = f"{vote} at {timestamp}"
+    
+    # Convert back to the final string for storage
+    final_votes = '\n'.join([f"{name}: {v}" for name, v in user_votes.items()])
+    vote_value = [{'range': vote_cell, 'values': [[final_votes]]}]
     body = {'valueInputOption': 'USER_ENTERED', 'data': vote_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=body).execute()
-
-    # # Update the history
-    # history_cell = f"E{row_index}"
-    # current_history = sheet.values().get(spreadsheetId=SHEET_ID, range=history_cell).execute().get('values', [['']])[0][0]
-    # timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # new_history = f"{current_history}\n{reviewer_name}: {vote} at {timestamp}".strip()
-    # history_value = [{'range': history_cell, 'values': [[new_history]]}]
-    # history_body = {'valueInputOption': 'USER_ENTERED', 'data': history_value}
-    # sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=history_body).execute()
 
     # Update the rating reason
     reason_cell = f"E{row_index}"
@@ -83,14 +81,12 @@ def save_vote_to_sheet(id, vote, reviewer_name, reason):
     reason_body = {'valueInputOption': 'USER_ENTERED', 'data': reason_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=reason_body).execute()
 
-
-    # 计算“是”投票的比例
-    all_votes = current_votes.split('\n') + [new_vote]
-    yes_votes = sum(1 for v in all_votes if 'Yes' in v)
-    total_votes = len(all_votes)
+    # Calculate the final result based on latest votes
+    yes_votes = sum(1 for v in user_votes.values() if 'Yes' in v)
+    total_votes = len(user_votes)
     result = "Keep" if yes_votes / total_votes > 0.6 else "No"
 
-    # 更新结果到 C 列
+    # Update result in column C
     result_cell = f"{RANGE_NAME}!C{row_index}"
     result_value = [{'range': result_cell, 'values': [[result]]}]
     result_body = {'valueInputOption': 'USER_ENTERED', 'data': result_value}
