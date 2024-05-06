@@ -96,6 +96,8 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
         score_value = float(s.split(' ')[0])
         total_score += score_value
     average_score = total_score / len(user_scores)
+
+    num_raters = len(user_scores)
     
     # Update the average score in column C
     result_cell = f"{RANGE_NAME}!C{row_index}"
