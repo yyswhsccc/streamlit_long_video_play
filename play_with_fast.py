@@ -8,7 +8,7 @@ from datetime import datetime
 SHEET_ID = '1jESaEV_iK5GSuO2WDV8RTcDzP42WmDIE4dAIei7yYFU'
 RANGE_NAME = 'Sheet1'
 SERVICE_ACCOUNT_FILE = 'caption-comparison-3dd6dfcad088.json'
-num_ids = 2000
+num_ids = 100
 
 # Initialize Google Sheets API
 credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
