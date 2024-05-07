@@ -37,7 +37,11 @@ def get_image_and_captions(id):
     # 构建视频文件名
     video_filename = f"{id:08d}.mp4"
     # video_url = f"http://localhost:8093/{video_filename}"
-    video_url = f"http://localhost/videos/{video_filename}"
+    
+    # 使用 AWS 实例的公共 DNS
+    public_dns = "ec2-54-176-199-228.us-west-1.compute.amazonaws.com"
+    video_url = f"http://{public_dns}/videos/{video_filename}"
+
     # 假设所有文件都存在并且没有附带的 caption
     return video_url, None
 
