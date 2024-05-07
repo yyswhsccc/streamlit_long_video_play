@@ -54,7 +54,7 @@ from datetime import datetime
 def save_score_to_sheet(id, score, reviewer_name, reason):
     row_index = id + 122  # Assuming data starts from the 122 row, id is a 0-based index
 
-    score_cell = f"{RANGE_NAME}!D{row_index}"
+    score_cell = f"{RANGE_NAME}!E{row_index}"
     current_scores = sheet.values().get(spreadsheetId=SHEET_ID, range=score_cell).execute().get('values', [['']])[0][0]
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
@@ -76,7 +76,7 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=body).execute()
 
     # Update the history
-    history_cell = f"E{row_index}"
+    history_cell = f"F{row_index}"
     current_history = sheet.values().get(spreadsheetId=SHEET_ID, range=history_cell).execute().get('values', [['']])[0][0]
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_history = f"{current_history}\n{reviewer_name}: {score} at {timestamp}".strip()
@@ -85,7 +85,7 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=history_body).execute()
 
     # Update the rating reason
-    reason_cell = f"F{row_index}"
+    reason_cell = f"G{row_index}"
     current_reason = sheet.values().get(spreadsheetId=SHEET_ID, range=reason_cell).execute().get('values', [['']])[0][0]
     new_reason = f"{current_reason}\n{reviewer_name}: {reason}, at {timestamp}".strip()
     reason_value = [{'range': reason_cell, 'values': [[new_reason]]}]
@@ -102,7 +102,7 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     num_raters = len(user_scores)
     
     # Update the average score in column C
-    result_cell = f"{RANGE_NAME}!C{row_index}"
+    result_cell = f"{RANGE_NAME}!D{row_index}"
     result_value = [{'range': result_cell, 'values': [[f"{average_score:.2f}\nNumber of raters: {num_raters}"]]}]
     result_body = {'valueInputOption': 'USER_ENTERED', 'data': result_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=result_body).execute()
