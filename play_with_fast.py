@@ -38,8 +38,6 @@ def get_image_and_captions(id):
     video_filename = f"{id:08d}.mp4"
     # video_url = f"http://localhost:8093/{video_filename}"
     
-    # 使用 AWS 实例的公共 DNS
-    # public_dns = "ec2-54-176-199-228.us-west-1.compute.amazonaws.com"
     video_url = f"http://54.176.199.228/videos/{video_filename}"
 
     # 假设所有文件都存在并且没有附带的 caption
@@ -128,7 +126,9 @@ def main():
     video_url, _ = get_image_and_captions(id_dropdown)
     
     # Display video based on selected data ID
-    st.video(video_url)
+    # st.video(video_url)
+
+    st.write(video_url)
 
     score_input = st.slider("Rate the video (1: Terrible, 3: Pass, 5: High quality)", 1, 5, value=3)
     reviewer_name_input = st.text_input("Your Name", placeholder="Enter your name...")
