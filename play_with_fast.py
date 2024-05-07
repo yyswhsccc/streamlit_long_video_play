@@ -52,7 +52,7 @@ from datetime import datetime
 # Also, define `sheet` which represents the Google Sheets API client.
 
 def save_score_to_sheet(id, score, reviewer_name, reason):
-    row_index = id + 122  # Assuming data starts from the 122 row, id is a 0-based index
+    row_index = id + 122  # Assuming data starts from the third row, id is a 0-based index
 
     score_cell = f"{RANGE_NAME}!E{row_index}"
     current_scores = sheet.values().get(spreadsheetId=SHEET_ID, range=score_cell).execute().get('values', [['']])[0][0]
@@ -75,6 +75,26 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     body = {'valueInputOption': 'USER_ENTERED', 'data': score_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=body).execute()
 
+    # Update the rating reason
+    reason_cell = f"G{row_index}"
+    current_reasons = sheet.values().get(spreadsheetId=SHEET_ID, range=reason_cell).execute().get('values', [['']])[0][0]
+    # Process existing reasons
+    all_reasons = current_reasons.split('\n')
+    user_reasons = {}
+    for r in all_reasons:
+        if ':' in r:
+            name, rest = r.split(':', 1)
+            user_reasons[name.strip()] = rest.strip()
+
+    # Update with the new reason
+    user_reasons[reviewer_name] = f"{reason}, at {timestamp}"
+
+    # Convert back to the final string for storage
+    final_reasons = '\n'.join([f"{name}: {r}" for name, r in user_reasons.items()])
+    reason_value = [{'range': reason_cell, 'values': [[final_reasons]]}]
+    reason_body = {'valueInputOption': 'USER_ENTERED', 'data': reason_value}
+    sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=reason_body).execute()
+
     # Update the history
     history_cell = f"F{row_index}"
     current_history = sheet.values().get(spreadsheetId=SHEET_ID, range=history_cell).execute().get('values', [['']])[0][0]
@@ -83,14 +103,6 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     history_value = [{'range': history_cell, 'values': [[new_history]]}]
     history_body = {'valueInputOption': 'USER_ENTERED', 'data': history_value}
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=history_body).execute()
-
-    # Update the rating reason
-    reason_cell = f"G{row_index}"
-    current_reason = sheet.values().get(spreadsheetId=SHEET_ID, range=reason_cell).execute().get('values', [['']])[0][0]
-    new_reason = f"{current_reason}\n{reviewer_name}: {reason}, at {timestamp}".strip()
-    reason_value = [{'range': reason_cell, 'values': [[new_reason]]}]
-    reason_body = {'valueInputOption': 'USER_ENTERED', 'data': reason_value}
-    sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=reason_body).execute()
 
     # Calculate the average score based on the latest scores
     total_score = 0
