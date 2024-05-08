@@ -123,10 +123,10 @@ def submit(id, score, reviewer_name, reason):
     # Check if the reviewer name or reason is missing and display a prominent error message
     if not reviewer_name:
         st.error("Error: You must enter your name to rate this video. Please enter your name below.")
-        return None  # Return None to stop the execution of the function here
+        return False  # Return None to stop the execution of the function here
     if not reason:
         st.error("Error: You must provide a reason for your rating. Please enter your reason below.")
-        return None  # Return None to stop the execution of the function here
+        return False  # Return None to stop the execution of the function here
     save_score_to_sheet(id, score, reviewer_name, reason)
     return "Rating and reason saved successfully."
 
