@@ -120,10 +120,13 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=result_body).execute()
 
 def submit(id, score, reviewer_name, reason):
+    # Check if the reviewer name or reason is missing and display a prominent error message
     if not reviewer_name:
-        return "Please enter your name to rate this video."
+        st.error("Error: You must enter your name to rate this video. Please enter your name below.")
+        return None  # Return None to stop the execution of the function here
     if not reason:
-        return "Please provide a reason for your rating."
+        st.error("Error: You must provide a reason for your rating. Please enter your reason below.")
+        return None  # Return None to stop the execution of the function here
     save_score_to_sheet(id, score, reviewer_name, reason)
     return "Rating and reason saved successfully."
 
@@ -148,7 +151,8 @@ def main():
 
     if st.button("Submit Rating"):
         result = submit(id_dropdown, score_input, reviewer_name_input, reason_input)
-        st.write(result)
+        if result:
+            st.success(result)
 
 if __name__ == "__main__":
     main()
