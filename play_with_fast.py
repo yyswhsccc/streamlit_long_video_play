@@ -128,7 +128,7 @@ def submit(id, score, reviewer_name, reason):
         st.error("Error: You must provide a reason for your rating. Please enter your reason below.")
         return False  # Return None to stop the execution of the function here
     save_score_to_sheet(id, score, reviewer_name, reason)
-    return "Rating and reason saved successfully."
+    return True
 
 def main():
     st.title("Data Rating Tool")
@@ -152,7 +152,7 @@ def main():
     if st.button("Submit Rating"):
         result = submit(id_dropdown, score_input, reviewer_name_input, reason_input)
         if result:
-            st.success(result)
+            st.success("Rating and reason saved successfully.")
 
 if __name__ == "__main__":
     main()
