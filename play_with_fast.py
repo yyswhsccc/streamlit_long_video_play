@@ -166,7 +166,7 @@ def main():
     with col3:
         progress = video_index / num_ids
         st.progress(progress)
-
+        
     # Rating interface
     score_input = st.slider("Rate the video (1: Terrible, 3: Pass, 5: High quality)", 1, 5, value=3)
     reviewer_name_input = st.text_input("Your Name", placeholder="Enter your name...")
