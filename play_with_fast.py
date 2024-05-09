@@ -134,26 +134,48 @@ def main():
     st.title("Data Rating Tool")
     st.write("Please rate this video to decide whether it should remain in our dataset.")
 
+    if "video_index" not in st.session_state:
+        st.session_state["video_index"] = 0
+
     ids = list(range(num_ids))
-    id_dropdown = st.selectbox("Choose Data ID", ids)
+    id_dropdown = st.selectbox("Choose Data ID", ids, index=st.session_state["video_index"])
 
-    # Get only the video URL from the returned tuple
-    video_url, _ = get_image_and_captions(id_dropdown)
-    
-    # Display video based on selected data ID
-    # st.video(video_url)
+    # Update video index when dropdown changes
+    st.session_state["video_index"] = id_dropdown
+    video_index = st.session_state["video_index"]
+    video_url, _ = get_image_and_captions(video_index)
 
-    st.write(video_url)
+    st.write(video_url)  # Assuming this prints the video URL, you might replace it with st.video(video_url) for actual videos
 
+    # Navigation and progress bar
+    col1, col2, col3 = st.columns([1, 1, 2])
+    with col1:
+        if st.button("Previous Video"):
+            if video_index > 0:
+                st.session_state["video_index"] -= 1
+                st.experimental_rerun()
+            else:
+                st.warning('This is the first video.')
+    with col2:
+        if st.button("Next Video"):
+            if video_index < num_ids - 1:
+                st.session_state["video_index"] += 1
+                st.experimental_rerun()
+            else:
+                st.warning('This is the last video.')
+    with col3:
+        progress = video_index / num_ids
+        st.progress(progress)
+
+    # Rating interface
     score_input = st.slider("Rate the video (1: Terrible, 3: Pass, 5: High quality)", 1, 5, value=3)
     reviewer_name_input = st.text_input("Your Name", placeholder="Enter your name...")
     reason_input = st.text_area("Rating Reason", placeholder="Enter your reason for rating...")
 
     if st.button("Submit Rating"):
-        result = submit(id_dropdown, score_input, reviewer_name_input, reason_input)
+        result = submit(video_index, score_input, reviewer_name_input, reason_input)
         if result:
             st.success("Rating and reason saved successfully.")
 
 if __name__ == "__main__":
     main()
-
