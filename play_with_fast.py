@@ -148,7 +148,7 @@ def main():
     st.write(video_url)  # Assuming this prints the video URL, you might replace it with st.video(video_url) for actual videos
 
     # Navigation and progress bar
-    col1, col2, col3 = st.columns([1, 1, 2])
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
     with col1:
         if st.button("Previous Video"):
             if video_index > 0:
@@ -163,7 +163,14 @@ def main():
                 st.experimental_rerun()
             else:
                 st.warning('This is the last video.')
+
     with col3:
+        if st.button('Random Video'):
+            random_id = random.randint(0, num_ids - 1)
+            st.session_state['video_index'] = random_id
+            st.experimental_rerun()
+            
+    with col4:
         progress = video_index / num_ids
         st.progress(progress)
         
