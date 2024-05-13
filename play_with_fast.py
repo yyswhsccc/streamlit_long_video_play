@@ -47,13 +47,13 @@ sheet = service.spreadsheets()
 #     return video_url, None
 
 # 按照文件名本身 进行读取
-def get_image_and_captions(id):
-    # 获取目录下所有视频文件名
-    video_files = os.listdir('/home/ec2-user/torrent_videos_valid')
+def get_image_and_captions(id, csv_path):
+    # 从CSV文件中读取视频文件名
+    csv_path = 'video_filenames.csv'
     
-    # 确保文件ID有效
-    if id < len(video_files):
-        video_filename = video_files[id]
+    df = pd.read_csv(csv_path)
+    if id < len(df):
+        video_filename = df.loc[id, 'filename']
         video_url = f"http://54.176.199.228/videos/{video_filename}"
     else:
         # 如果ID无效，返回错误信息
