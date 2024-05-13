@@ -10,7 +10,7 @@ import os
 SHEET_ID = '1jESaEV_iK5GSuO2WDV8RTcDzP42WmDIE4dAIei7yYFU'
 RANGE_NAME = 'Sheet1'
 SERVICE_ACCOUNT_FILE = 'caption-comparison-3dd6dfcad088.json'
-num_ids = 10000
+num_ids = 194
 
 # Initialize Google Sheets API
 credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
