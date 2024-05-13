@@ -36,30 +36,30 @@ sheet = service.spreadsheets()
 #     return video_url, gpt4v_caption
 
 # 按照00000000-99999999进行读取
-# def get_image_and_captions(id):
-#     # 构建视频文件名
-#     video_filename = f"{id:08d}.mp4"
-#     # video_url = f"http://localhost:8093/{video_filename}"
+def get_image_and_captions(id):
+    # 构建视频文件名
+    video_filename = f"{id:08d}.mp4"
+    # video_url = f"http://localhost:8093/{video_filename}"
     
-#     video_url = f"http://54.176.199.228//videos/{video_filename}"
+    video_url = f"http://54.176.199.228//videos/{video_filename}"
 
-#     # 假设所有文件都存在并且没有附带的 caption
-#     return video_url, None
+    # 假设所有文件都存在并且没有附带的 caption
+    return video_url, None
 
 # 按照文件名本身 进行读取
-def get_image_and_captions(id, csv_path):
-    # 从CSV文件中读取视频文件名
-    csv_path = 'video_filenames.csv'
+# def get_image_and_captions(id, csv_path):
+#     # 从CSV文件中读取视频文件名
+#     csv_path = 'video_filenames.csv'
     
-    df = pd.read_csv(csv_path)
-    if id < len(df):
-        video_filename = df.loc[id, 'filename']
-        video_url = f"http://54.176.199.228/videos/{video_filename}"
-    else:
-        # 如果ID无效，返回错误信息
-        video_url = "Invalid video ID"
+#     df = pd.read_csv(csv_path)
+#     if id < len(df):
+#         video_filename = df.loc[id, 'filename']
+#         video_url = f"http://54.176.199.228/videos/{video_filename}"
+#     else:
+#         # 如果ID无效，返回错误信息
+#         video_url = "Invalid video ID"
     
-    return video_url, None
+#     return video_url, None
 
 
 import streamlit as st
