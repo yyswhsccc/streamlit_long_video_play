@@ -61,7 +61,7 @@ sheet = service.spreadsheets()
     
 #     return video_url, None
 
-def get_video_url(id):
+def get_image_and_captions(id):
     # 读取CSV文件
     csv_file_path = 'rename_log.csv'  # 确保这里是CSV文件的正确路径
     rename_log = pd.read_csv(csv_file_path)
