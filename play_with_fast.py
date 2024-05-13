@@ -62,18 +62,22 @@ sheet = service.spreadsheets()
 #     return video_url, None
 
 def get_image_and_captions(id):
-    # 读取CSV文件
-    csv_file_path = 'rename_log.csv'  # 确保这里是CSV文件的正确路径
-    rename_log = pd.read_csv(csv_file_path)
-    
-    # 确保ID在有效范围内
-    if id >= 0 and id < len(rename_log):
-        video_filename = rename_log['New Name'].iloc[id]
-        video_url = f"http://54.176.199.228//videos/{video_filename}"
-        return video_url
-    else:
-        return None  # 如果ID无效，返回None或相应的错误消息
-
+    try:
+        # 读取CSV文件
+        csv_file_path = 'rename_log.csv'  # 确保这里是CSV文件的正确路径
+        rename_log = pd.read_csv(csv_file_path)
+        
+        # 确保ID在有效范围内
+        if id >= 0 and id < len(rename_log):
+            video_filename = rename_log['New Name'].iloc[id]
+            video_url = f"http://54.176.199.228//videos/{video_filename}"
+            return video_url, None
+        else:
+            return "Invalid video ID", None  # 返回一个错误消息而不是None
+    except Exception as e:
+        # 处理可能的错误，例如文件找不到或读取CSV失败
+        print(f"Error accessing video data: {str(e)}")
+        return "Error loading video data", None  # 返回错误消息
 
 import streamlit as st
 from datetime import datetime
