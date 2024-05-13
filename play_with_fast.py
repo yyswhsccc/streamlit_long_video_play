@@ -4,6 +4,7 @@ from googleapiclient.discovery import build
 import pandas as pd
 from datetime import datetime
 import random
+import os
 
 # Constants and configuration
 SHEET_ID = '1jESaEV_iK5GSuO2WDV8RTcDzP42WmDIE4dAIei7yYFU'
