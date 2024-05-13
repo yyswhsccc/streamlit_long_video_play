@@ -34,14 +34,30 @@ sheet = service.spreadsheets()
 
 #     return video_url, gpt4v_caption
 
-def get_image_and_captions(id):
-    # 构建视频文件名
-    video_filename = f"{id:08d}.mp4"
-    # video_url = f"http://localhost:8093/{video_filename}"
+# 按照00000000-99999999进行读取
+# def get_image_and_captions(id):
+#     # 构建视频文件名
+#     video_filename = f"{id:08d}.mp4"
+#     # video_url = f"http://localhost:8093/{video_filename}"
     
-    video_url = f"http://18.144.16.68//videos/{video_filename}"
+#     video_url = f"http://54.176.199.228//videos/{video_filename}"
 
-    # 假设所有文件都存在并且没有附带的 caption
+#     # 假设所有文件都存在并且没有附带的 caption
+#     return video_url, None
+
+# 按照文件名本身 进行读取
+def get_image_and_captions(id):
+    # 获取目录下所有视频文件名
+    video_files = os.listdir('/home/ec2-user/torrent_videos_valid')
+    
+    # 确保文件ID有效
+    if id < len(video_files):
+        video_filename = video_files[id]
+        video_url = f"http://54.176.199.228/videos/{video_filename}"
+    else:
+        # 如果ID无效，返回错误信息
+        video_url = "Invalid video ID"
+    
     return video_url, None
 
 
