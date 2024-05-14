@@ -64,7 +64,7 @@ sheet = service.spreadsheets()
 def get_image_and_captions(id):
     try:
         # 读取CSV文件
-        csv_file_path = 'rename_log.csv'  # 确保这里是CSV文件的正确路径
+        csv_file_path = 'rename_log_mira.csv'  # 确保这里是CSV文件的正确路径
         rename_log = pd.read_csv(csv_file_path)
         
         # 确保ID在有效范围内
