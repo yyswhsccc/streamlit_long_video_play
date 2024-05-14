@@ -10,7 +10,7 @@ import os
 SHEET_ID = '1jESaEV_iK5GSuO2WDV8RTcDzP42WmDIE4dAIei7yYFU'
 RANGE_NAME = 'Sheet1'
 SERVICE_ACCOUNT_FILE = 'caption-comparison-3dd6dfcad088.json'
-num_ids = 194
+num_ids = 200
 
 # Initialize Google Sheets API
 credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
@@ -87,7 +87,7 @@ from datetime import datetime
 # Also, define `sheet` which represents the Google Sheets API client.
 
 def save_score_to_sheet(id, score, reviewer_name, reason):
-    row_index = id + 10226  # Assuming data starts from the third row, id is a 0-based index
+    row_index = id + 10422  # Assuming data starts from the third row, id is a 0-based index
 
     score_cell = f"{RANGE_NAME}!E{row_index}"
     current_scores = sheet.values().get(spreadsheetId=SHEET_ID, range=score_cell).execute().get('values', [['']])[0][0]
