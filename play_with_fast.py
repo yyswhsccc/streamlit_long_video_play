@@ -99,7 +99,7 @@ def plot_cdf(video_data, current_video_id):
     values, base = np.histogram(durations, bins=40, weights=np.ones(len(durations)) / len(durations))
     cumulative = np.cumsum(values)
 
-    plt.figure(figsize=(3, 4))
+    plt.figure(figsize=(12, 2))
     plt.plot(base[:-1], cumulative, c='blue')
     
     # 找到当前视频的时长
