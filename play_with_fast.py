@@ -111,7 +111,7 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=body).execute()
 
     # Update the rating reason
-    reason_cell = f"G{row_index}"
+    reason_cell = f"{RANGE_NAME}!G{row_index}"
     current_reasons = sheet.values().get(spreadsheetId=SHEET_ID, range=reason_cell).execute().get('values', [['']])[0][0]
     # Process existing reasons
     all_reasons = current_reasons.split('\n')
@@ -131,7 +131,7 @@ def save_score_to_sheet(id, score, reviewer_name, reason):
     sheet.values().batchUpdate(spreadsheetId=SHEET_ID, body=reason_body).execute()
 
     # Update the history
-    history_cell = f"F{row_index}"
+    history_cell = f"{RANGE_NAME}!F{row_index}"
     current_history = sheet.values().get(spreadsheetId=SHEET_ID, range=history_cell).execute().get('values', [['']])[0][0]
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_history = f"{current_history}\n{reviewer_name}: {score} at {timestamp}".strip()
