@@ -8,7 +8,7 @@ import os
 
 # Constants and configuration
 SHEET_ID = '1jESaEV_iK5GSuO2WDV8RTcDzP42WmDIE4dAIei7yYFU'
-RANGE_NAME = 'Sheet1'
+RANGE_NAME = 'Sheet4'
 SERVICE_ACCOUNT_FILE = 'caption-comparison-3dd6dfcad088.json'
 num_ids = 10000
 
@@ -87,7 +87,7 @@ from datetime import datetime
 # Also, define `sheet` which represents the Google Sheets API client.
 
 def save_score_to_sheet(id, score, reviewer_name, reason):
-    row_index = id + 10422  # Assuming data starts from the third row, id is a 0-based index
+    row_index = id + 3  # Assuming data starts from the third row, id is a 0-based index
 
     score_cell = f"{RANGE_NAME}!E{row_index}"
     current_scores = sheet.values().get(spreadsheetId=SHEET_ID, range=score_cell).execute().get('values', [['']])[0][0]
@@ -212,7 +212,7 @@ def main():
     # Rating interface
     score_input = st.slider("Rate the video (1: Terrible, 3: Pass, 5: High quality)", 1, 5, value=3)
     reviewer_name_input = st.text_input("Your Name", placeholder="Enter your name...")
-    reason_input = st.text_area("Rating Reason (NOT MANDATORY) ", placeholder="Enter your reason for rating...")
+    reason_input = st.text_area("Write your feedback (NOT MANDATORY) ", placeholder="Enter your reason for rating...")
 
     if st.button("Submit Rating"):
         result = submit(video_index, score_input, reviewer_name_input, reason_input)
