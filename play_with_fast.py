@@ -8,7 +8,7 @@ import os
 
 # Constants and configuration
 SHEET_ID = '1jESaEV_iK5GSuO2WDV8RTcDzP42WmDIE4dAIei7yYFU'
-RANGE_NAME = 'Sheet4'
+RANGE_NAME = 'high quality 100k feedback'
 SERVICE_ACCOUNT_FILE = 'caption-comparison-3dd6dfcad088.json'
 num_ids = 10000
 
