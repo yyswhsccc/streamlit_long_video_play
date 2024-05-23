@@ -98,6 +98,8 @@ def plot_cdf(video_data, current_video_id):
     # 计算累积分布
     values, base = np.histogram(durations, bins=40, weights=np.ones(len(durations)) / len(durations))
     cumulative = np.cumsum(values)
+
+    plt.figure(figsize=(3, 4))
     plt.plot(base[:-1], cumulative, c='blue')
     
     # 找到当前视频的时长
