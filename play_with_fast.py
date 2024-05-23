@@ -193,6 +193,8 @@ def main():
     st.title("Data Rating Tool")
     st.write("Please rate this video to decide whether it should remain in our dataset.")
 
+    video_data = load_video_data('video_durations.csv')
+
     if "video_index" not in st.session_state:
         st.session_state["video_index"] = 0
 
