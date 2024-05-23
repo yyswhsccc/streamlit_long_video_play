@@ -159,9 +159,9 @@ def submit(id, score, reviewer_name, reason):
     if not reviewer_name:
         st.error("Error: You must enter your name to rate this video. Please enter your name below.")
         return False  # Return None to stop the execution of the function here
-    if not reason:
-        st.error("Error: You must provide a reason for your rating. Please enter your reason below.")
-        return False  # Return None to stop the execution of the function here
+    # if not reason:
+    #     st.error("Error: You must provide a reason for your rating. Please enter your reason below.")
+    #     return False  # Return None to stop the execution of the function here
     save_score_to_sheet(id, score, reviewer_name, reason)
     return True
 
@@ -212,7 +212,7 @@ def main():
     # Rating interface
     score_input = st.slider("Rate the video (1: Terrible, 3: Pass, 5: High quality)", 1, 5, value=3)
     reviewer_name_input = st.text_input("Your Name", placeholder="Enter your name...")
-    reason_input = st.text_area("Rating Reason", placeholder="Enter your reason for rating...")
+    reason_input = st.text_area("Rating Reason (NOT MANDATORY) ", placeholder="Enter your reason for rating...")
 
     if st.button("Submit Rating"):
         result = submit(video_index, score_input, reviewer_name_input, reason_input)
