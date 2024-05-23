@@ -2,6 +2,8 @@ import streamlit as st
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 from datetime import datetime
 import random
 import os
@@ -85,6 +87,28 @@ from datetime import datetime
 # Ensure to set up your Google Sheets API and credentials
 # RANGE_NAME and SHEET_ID should be defined here or imported
 # Also, define `sheet` which represents the Google Sheets API client.
+
+# 加载视频时长数据
+def load_video_data(csv_path):
+    df = pd.read_csv(csv_path)
+    return df
+
+def plot_cdf(video_data, current_video_id):
+    durations = video_data['duration'].sort_values().values
+    # 计算累积分布
+    values, base = np.histogram(durations, bins=40, weights=np.ones(len(durations)) / len(durations))
+    cumulative = np.cumsum(values)
+    plt.plot(base[:-1], cumulative, c='blue')
+    
+    # 找到当前视频的时长
+    current_duration = video_data[video_data['video_id'] == current_video_id]['duration'].values[0]
+    # 标注当前视频的位置
+    plt.scatter(current_duration, np.interp(current_duration, base[:-1], cumulative), color='red')
+    plt.title('Video Duration Distribution')
+    plt.xlabel('Duration (seconds)')
+    plt.ylabel('CDF')
+    plt.grid(True)
+
 
 def save_score_to_sheet(id, score, reviewer_name, reason):
     row_index = id + 3  # Assuming data starts from the third row, id is a 0-based index
@@ -179,6 +203,10 @@ def main():
     st.session_state["video_index"] = id_dropdown
     video_index = st.session_state["video_index"]
     video_url, _ = get_image_and_captions(video_index)
+
+    current_video_id = video_data.loc[video_index, 'video_id']
+    plot_cdf(video_data, current_video_id)
+    st.pyplot(plt)  # 显示图表
 
     st.write(video_url)  # Assuming this prints the video URL, you might replace it with st.video(video_url) for actual videos
 
