@@ -37,7 +37,7 @@ sheet = service.spreadsheets()
 
 #     return video_url, gpt4v_caption
 
-按照00000000-99999999进行读取
+# 按照00000000-99999999进行读取
 def get_image_and_captions(id):
     # 构建视频文件名
     video_filename = f"{id:08d}.mp4"
