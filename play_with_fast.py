@@ -93,7 +93,7 @@ def load_video_data(csv_path):
     df = pd.read_csv(csv_path)
     return df
 
-def plot_cdf(video_data, current_video_id):
+def plot_cdf(video_data, video_filename):
     durations = video_data['duration'].sort_values().values
     # 计算累积分布
     values, base = np.histogram(durations, bins=40, weights=np.ones(len(durations)) / len(durations))
@@ -102,10 +102,14 @@ def plot_cdf(video_data, current_video_id):
     plt.figure(figsize=(12, 2))
     plt.plot(base[:-1], cumulative, c='blue')
     
-    # 找到当前视频的时长
-    current_duration = video_data[video_data['video_id'] == current_video_id]['duration'].values[0]
-    # 标注当前视频的位置
-    plt.scatter(current_duration, np.interp(current_duration, base[:-1], cumulative), color='red')
+    # 根据视频文件名直接找到当前视频的时长
+    if video_filename in video_data['video_id'].values:
+        current_duration = video_data[video_data['video_id'] == video_filename]['duration'].values[0]
+        # 标注当前视频的位置
+        plt.scatter(current_duration, np.interp(current_duration, base[:-1], cumulative), color='red')
+    else:
+        print("Video filename not found in duration data.")
+
     plt.title('Video Duration Distribution')
     plt.xlabel('Duration (seconds)')
     plt.ylabel('CDF')
@@ -208,13 +212,13 @@ def main():
     video_index = st.session_state["video_index"]
     video_url, _ = get_image_and_captions(video_index)
 
-    current_video_id = video_data.loc[video_index, 'video_id']
-    print(f"Selected Video ID: {current_video_id}")  # 输出当前选择的Video ID
+    # 从视频URL中提取文件名
+    video_filename = video_url.split('/')[-1]
 
-    plot_cdf(video_data, current_video_id)
+    plot_cdf(video_data, video_filename)
     st.pyplot(plt)  # 显示图表
 
-    st.write(video_url)  # Assuming this prints the video URL, you might replace it with st.video(video_url) for actual videos
+    st.video(video_url)  # Display the video using Streamlit's video widget
 
     # Navigation and progress bar
     col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
