@@ -200,7 +200,7 @@ def main():
     if "video_index" not in st.session_state:
         st.session_state["video_index"] = 0
 
-    ids = list(range(num_ids))
+    ids = list(range(len(video_data)))  # 确保下拉菜单与数据行对应
     id_dropdown = st.selectbox("Choose Data ID", ids, index=st.session_state["video_index"])
 
     # Update video index when dropdown changes
