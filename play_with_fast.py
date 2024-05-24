@@ -203,12 +203,14 @@ def main():
     ids = list(range(len(video_data)))  # 确保下拉菜单与数据行对应
     id_dropdown = st.selectbox("Choose Data ID", ids, index=st.session_state["video_index"])
 
-    # Update video index when dropdown changes
+    # 更新视频索引
     st.session_state["video_index"] = id_dropdown
     video_index = st.session_state["video_index"]
     video_url, _ = get_image_and_captions(video_index)
 
     current_video_id = video_data.loc[video_index, 'video_id']
+    print(f"Selected Video ID: {current_video_id}")  # 输出当前选择的Video ID
+
     plot_cdf(video_data, current_video_id)
     st.pyplot(plt)  # 显示图表
 
