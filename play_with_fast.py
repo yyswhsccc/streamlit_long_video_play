@@ -218,7 +218,7 @@ def main():
     plot_cdf(video_data, video_filename)
     st.pyplot(plt)  # 显示图表
 
-    st.video(video_url)  # Display the video using Streamlit's video widget
+    st.write(video_url)  # Assuming this prints the video URL, you might replace it with st.video(video_url) for actual videos
 
     # Navigation and progress bar
     col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
